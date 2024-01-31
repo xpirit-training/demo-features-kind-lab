@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: dashboard-svc-tyk-stack-tyk-dashboard
+  name: dashboard-svc-tyk-stack-tyk-dashboard-nodeport
+spec:
+  type: NodePort
+  ports:
+    - name: http
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+      nodePort: 30182
+  selector:
+    app: dashboard-tyk-stack-tyk-dashboard

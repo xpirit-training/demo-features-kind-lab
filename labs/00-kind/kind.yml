@@ -1,0 +1,31 @@
+apiVersion: kind.x-k8s.io/v1alpha4
+kind: Cluster
+name: demo
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      # grafana
+      - containerPort: 30080
+        hostPort: 30080
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      # tyk
+      # gateway
+      - containerPort: 30180
+        hostPort: 30180
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      # control
+      - containerPort: 30181
+        hostPort: 30181
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      # pump
+      - containerPort: 30182
+        hostPort: 38082
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+  - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
