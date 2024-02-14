@@ -5,6 +5,7 @@ Lab deploying various infrastructure to a kind cluster
 
 ```bash
 # create cluster
+# with kind
 kind create cluster --config labs/00-kind/kind.yml
 
 # setup monitoring
@@ -12,17 +13,17 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 
-helm upgrade -i loki grafana/loki \
-    --version 5.42.0 \
-    --namespace monitoring \
-    --create-namespace \
-    -f labs/01-monitoring/loki.yml
-
 helm upgrade -i promtail grafana/promtail \
     --version 6.15.3 \
     --namespace monitoring \
     --create-namespace \
     -f labs/01-monitoring/promtail.yml
+
+helm upgrade -i loki grafana/loki \
+    --version 5.42.0 \
+    --namespace monitoring \
+    --create-namespace \
+    -f labs/01-monitoring/loki.yml
 
 helm upgrade -i prometheus prometheus-community/kube-prometheus-stack \
     --version 56.1.0 \
@@ -41,14 +42,15 @@ helm upgrade -i tyk-redis bitnami/redis \
     --create-namespace \
     -f labs/02-tyk/redis.yml
 
+# EITHER
 # either oss
 helm upgrade -i tyk-oss tyk-helm/tyk-oss \
     --version 1.2.0 \
     --namespace tyk \
     --create-namespace \
     -f labs/02-tyk/tyk-oss.yml
-
-# or enterprise
+# OR
+# enterprise
 helm upgrade -i tyk-postgres bitnami/postgresql \
     --version 13.4.3 \
     --namespace tyk \

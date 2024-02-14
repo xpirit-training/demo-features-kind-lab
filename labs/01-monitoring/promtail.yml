@@ -1,3 +1,35 @@
+readinessProbe:
+  failureThreshold: 5
+  httpGet:
+    path: "{{ printf `%s/ready` .Values.httpPathPrefix }}"
+    port: http-metrics
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+daemonset:
+  enabled: true
+  autoscaling:
+    enabled: false
+  minAllowed:
+    cpu: 200m
+    memory: 128Mi
+  maxAllowed:
+    cpu: 400m
+    memory: 256Mi
+
+sidecar:
+  configReloader:
+    enabled: false
 ---
 # # -- Overrides the chart's name
 # nameOverride: null
@@ -40,11 +72,11 @@
 #     # memory: 100Mi
 
 #     # updatePolicy:
-#       # Specifies minimal number of replicas which need to be alive for VPA Updater to attempt pod eviction
-#       # minReplicas: 1
-#       # Specifies whether recommended updates are applied when a Pod is started and whether recommended updates
-#       # are applied during the life of a Pod. Possible values are "Off", "Initial", "Recreate", and "Auto".
-#       # updateMode: Auto
+#     # Specifies minimal number of replicas which need to be alive for VPA Updater to attempt pod eviction
+#     # minReplicas: 1
+#     # Specifies whether recommended updates are applied when a Pod is started and whether recommended updates
+#     # are applied during the life of a Pod. Possible values are "Off", "Initial", "Recreate", and "Auto".
+#     # updateMode: Auto
 
 # deployment:
 #   # -- Deploys Promtail as a Deployment
@@ -73,7 +105,8 @@
 #   # -- If enabled, promtail config will be created as a ConfigMap instead of a secret
 #   enabled: false
 
-# initContainer: []
+# initContainer:
+#   []
 #   # # -- Specifies whether the init container for setting inotify max user instances is to be enabled
 #   # - name: init
 #   #   # -- Docker registry, image and tag for the init container image
@@ -322,7 +355,8 @@
 # #
 # # Note that the key is used as the `name` field, i.e. below will create a
 # # container named `promtail-proxy`.
-# extraContainers: {}
+# extraContainers:
+#   {}
 #   # promtail-proxy:
 #   #   image: nginx
 #   #   ...
@@ -368,20 +402,20 @@
 #   privileged: true
 #   allowPrivilegeEscalation: true
 #   volumes:
-#     - 'secret'
-#     - 'hostPath'
-#     - 'downwardAPI'
+#     - "secret"
+#     - "hostPath"
+#     - "downwardAPI"
 #   hostNetwork: false
 #   hostIPC: false
 #   hostPID: false
 #   runAsUser:
-#     rule: 'RunAsAny'
+#     rule: "RunAsAny"
 #   seLinux:
-#     rule: 'RunAsAny'
+#     rule: "RunAsAny"
 #   supplementalGroups:
-#     rule: 'RunAsAny'
+#     rule: "RunAsAny"
 #   fsGroup:
-#     rule: 'RunAsAny'
+#     rule: "RunAsAny"
 #   readOnlyRootFilesystem: true
 #   requiredDropCapabilities:
 #     - ALL
@@ -623,7 +657,8 @@
 #       enabled: true
 
 # # -- Extra K8s manifests to deploy
-# extraObjects: []
+# extraObjects:
+#   []
 #   # - apiVersion: "kubernetes-client.io/v1"
 #   #   kind: ExternalSecret
 #   #   metadata:
@@ -633,4 +668,3 @@
 #   #     data:
 #   #       - key: promtail-oauth2-creds
 #   #         name: client_secret
-
