@@ -1,4 +1,5 @@
 # demo-features-kind-lab
+
 Lab deploying various infrastructure to a kind cluster
 
 ## Cluster With Tyk and Monitoring
@@ -13,8 +14,10 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 
-# rbac
+# ns
 kubectl apply -f labs/01-monitoring/prep/ns.yaml
+
+# rbac
 kubectl -n monitoring apply -f labs/01-monitoring/rbac
 
 # promtail
@@ -42,6 +45,12 @@ helm upgrade -i prometheus prometheus-community/kube-prometheus-stack \
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
 helm repo update
+
+# ns
+kubectl apply -f labs/02-tyk/prep/ns.yaml
+
+# rbac
+kubectl -n tyk apply -f labs/02-tyk/rbac
 
 # redis
 helm upgrade -i tyk-redis bitnami/redis \

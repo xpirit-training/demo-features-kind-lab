@@ -1,18 +1,23 @@
 global:
   rbac:
-    create: false
+    create: true
 
 crds:
   enabled: true
 
 kube-state-metrics:
   rbac:
-    create: false
+    create: true
+    useClusterRole: false
+    namespaces:
+      - monitoring
+      - tyk
 
 grafana:
   enabled: true
   rbac:
-    create: false
+    create: true
+    namespaced: true
   service:
     type: NodePort
     nodePort: 30080
@@ -20,30 +25,15 @@ grafana:
   additionalDataSources:
     - name: Loki
       type: loki
-      url: "http://loki-gateway.monitoring.svc.cluster.local"
+      url: "http://loki-gateway"
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace:
+        - monitoring
 
 alertmanager:
   enabled: false
-  alertmanagerSpec:
-    replicas: 1
-    alertmanagerConfigNamespaceSelector:
-      matchLabels:
-        monitorme: "true"
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: standard
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 5Gi
-    resources:
-      requests:
-        memory: 400Mi
-        cpu: 250m
-      limits:
-        memory: 800Mi
-        cpu: 500m
 
 prometheusOperator:
   resources:
@@ -58,7 +48,6 @@ prometheusOperator:
     namespaceSelector:
       matchLabels:
         monitorme: "true"
-    failurePolicy: Ignore
     deployment:
       replicas: 1
       livenessProbe:
@@ -145,26 +134,6 @@ serviceMonitor:
 
 thanosRuler:
   enabled: false
-  thanosRulerSpec:
-    replicas: 1
-    ruleNamespaceSelector:
-      matchLabels:
-        monitorme: "true"
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: standard
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 30Gi
-    resources:
-      requests:
-        memory: 400Mi
-        cpu: 250m
-      limits:
-        memory: 800Mi
-        cpu: 500m
 ---
 # # Default values for kube-prometheus-stack.
 # # This is a YAML-formatted file.

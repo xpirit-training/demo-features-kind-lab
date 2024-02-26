@@ -20,7 +20,7 @@ resources:
     memory: 256Mi
 
 daemonset:
-  enabled: false
+  enabled: true
   autoscaling:
     enabled: false
   minAllowed:
@@ -29,10 +29,6 @@ daemonset:
   maxAllowed:
     cpu: 400m
     memory: 256Mi
-
-deployment:
-  enabled: true
-  replicaCount: 1
 
 sidecar:
   configReloader:
@@ -50,6 +46,7 @@ config:
             namespaces:
               names:
                 - monitoring
+                - tyk
         relabel_configs:
           - source_labels:
               - __meta_kubernetes_pod_controller_name
