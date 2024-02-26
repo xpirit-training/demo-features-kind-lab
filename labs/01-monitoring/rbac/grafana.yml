@@ -1,0 +1,44 @@
+# Source: kube-prometheus-stack/charts/grafana/templates/clusterrole.yaml
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-grafana-clusterrole
+rules:
+  - apiGroups: [""] # "" indicates the core API group
+    resources: ["configmaps", "secrets"]
+    verbs: ["get", "watch", "list"]
+---
+# Source: kube-prometheus-stack/charts/grafana/templates/clusterrolebinding.yaml
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: prometheus-grafana-rolebinding
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-grafana
+    namespace: monitoring
+roleRef:
+  kind: ClusterRole
+  name: prometheus-grafana-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: kube-prometheus-stack/charts/grafana/templates/role.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: prometheus-grafana
+rules: []
+---
+# Source: kube-prometheus-stack/charts/grafana/templates/rolebinding.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: prometheus-grafana
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: prometheus-grafana
+subjects:
+  - kind: ServiceAccount
+    name: prometheus-grafana
+    namespace: monitoring

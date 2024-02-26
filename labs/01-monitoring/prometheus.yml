@@ -1,19 +1,34 @@
+global:
+  rbac:
+    create: false
+
 crds:
   enabled: true
 
+kube-state-metrics:
+  rbac:
+    create: false
+
 grafana:
   enabled: true
+  rbac:
+    create: false
   service:
     type: NodePort
     nodePort: 30080
+  defaultDashboardsEnabled: true
   additionalDataSources:
     - name: Loki
       type: loki
       url: "http://loki-gateway.monitoring.svc.cluster.local"
 
 alertmanager:
+  enabled: false
   alertmanagerSpec:
     replicas: 1
+    alertmanagerConfigNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
     storage:
       volumeClaimTemplate:
         spec:
@@ -39,6 +54,11 @@ prometheusOperator:
       cpu: 200m
       memory: 200Mi
   admissionWebhooks:
+    enabled: true
+    namespaceSelector:
+      matchLabels:
+        monitorme: "true"
+    failurePolicy: Ignore
     deployment:
       replicas: 1
       livenessProbe:
@@ -83,6 +103,21 @@ prometheusOperator:
 prometheus:
   prometheusSpec:
     replicas: 1
+    ruleNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
+    serviceMonitorNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
+    podMonitorNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
+    probeNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
+    scrapeConfigNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
     storageSpec:
       volumeClaimTemplate:
         spec:
@@ -109,8 +144,12 @@ serviceMonitor:
       memory: 100Mi
 
 thanosRuler:
+  enabled: false
   thanosRulerSpec:
     replicas: 1
+    ruleNamespaceSelector:
+      matchLabels:
+        monitorme: "true"
     storage:
       volumeClaimTemplate:
         spec:

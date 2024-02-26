@@ -1,6 +1,12 @@
 loki:
   auth_enabled: false
 
+rbac:
+  namespaced: true
+
+test:
+  enabled: false
+
 write:
   replicas: 3
   resources:
@@ -81,15 +87,12 @@ backend:
     storageClass: standard
 
 monitoring:
+  selfMonitoring:
+    enabled: false
+    grafanaAgent:
+      installOperator: false
   lokiCanary:
-    enabled: true
-    resources:
-      requests:
-        memory: 128Mi
-        cpu: 100m
-      limits:
-        memory: 128Mi
-        cpu: 100m
+    enabled: false
 
 minio:
   enabled: true
@@ -645,8 +648,8 @@ minio:
 #   # seccomp.security.alpha.kubernetes.io/allowedProfileNames: '*'
 #   # seccomp.security.alpha.kubernetes.io/defaultProfileName: 'docker/default'
 #   # apparmor.security.beta.kubernetes.io/defaultProfileName: 'runtime/default'
-#   # -- Whether to install RBAC in the namespace only or cluster-wide. Useful if you want to watch ConfigMap globally.
-#   namespaced: false
+#   # -- Whether namespaced: falseto install RBAC in the namespace only or cluster-wide. Useful if you want to watch ConfigMap globally.
+#
 # # -- Section for configuring optional Helm test
 # test:
 #   enabled: true

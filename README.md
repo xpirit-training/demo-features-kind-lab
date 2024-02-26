@@ -13,18 +13,25 @@ helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 helm repo update
 
+# rbac
+kubectl apply -f labs/01-monitoring/prep/ns.yaml
+kubectl -n monitoring apply -f labs/01-monitoring/rbac
+
+# promtail
 helm upgrade -i promtail grafana/promtail \
     --version 6.15.3 \
     --namespace monitoring \
     --create-namespace \
     -f labs/01-monitoring/promtail.yml
 
+# loki
 helm upgrade -i loki grafana/loki \
     --version 5.42.0 \
     --namespace monitoring \
     --create-namespace \
     -f labs/01-monitoring/loki.yml
 
+# prom-stack
 helm upgrade -i prometheus prometheus-community/kube-prometheus-stack \
     --version 56.1.0 \
     --namespace monitoring \
@@ -36,6 +43,7 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
 helm repo update
 
+# redis
 helm upgrade -i tyk-redis bitnami/redis \
     --version 18.9.1 \
     --namespace tyk \
@@ -49,8 +57,11 @@ helm upgrade -i tyk-oss tyk-helm/tyk-oss \
     --namespace tyk \
     --create-namespace \
     -f labs/02-tyk/tyk-oss.yml
+
 # OR
 # enterprise
+
+# postgres
 helm upgrade -i tyk-postgres bitnami/postgresql \
     --version 13.4.3 \
     --namespace tyk \
@@ -58,12 +69,14 @@ helm upgrade -i tyk-postgres bitnami/postgresql \
     -f labs/02-tyk/tyk-postgres.yml \
     --wait
 
+# tyk stack
 helm upgrade -i tyk-stack tyk-helm/tyk-stack \
     --version 1.0.0 \
     --namespace tyk \
     --create-namespace \
     -f labs/02-tyk/tyk-stack.yml
 
+# nodeport svc
 kubectl -n tyk apply -f labs/02-tyk/nodeport-svc
 
 # info
