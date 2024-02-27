@@ -1,0 +1,20 @@
+{{- if .Values.global.rbac.create }}
+{{- range $ns := .Values.global.monitoringNamespaces }}
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "promtail.fullname" $ }}
+  namespace: {{ $ns }}
+  labels:
+    {{- include "promtail.labels" $ | nindent 4 }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "promtail.serviceAccountName" $ }}
+    namespace: {{ include "promtail.namespaceName" $ }}
+roleRef:
+  kind: ClusterRole
+  name: {{ include "promtail.fullname" $ }}
+  apiGroup: rbac.authorization.k8s.io
+---
+{{- end }}
+{{- end }}

@@ -1,2 +1,4 @@
 /dev
 /.vscode
+
+/charts/**/charts/*.tgz

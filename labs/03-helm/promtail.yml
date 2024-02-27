@@ -1,0 +1,5 @@
+global:
+  # select namespaces to monitor
+  monitoringNamespaces:
+    - monitoring
+    - tyk
