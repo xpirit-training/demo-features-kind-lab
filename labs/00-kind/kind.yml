@@ -22,7 +22,12 @@ nodes:
         protocol: TCP
       # pump
       - containerPort: 30182
-        hostPort: 38082
+        hostPort: 30182
+        listenAddress: "0.0.0.0"
+        protocol: TCP
+      # artifactory
+      - containerPort: 30280
+        hostPort: 30280
         listenAddress: "0.0.0.0"
         protocol: TCP
   - role: worker

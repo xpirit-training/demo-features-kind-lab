@@ -1,0 +1,86 @@
+global:
+  joinKeySecretName: joinkey
+  masterKeySecretName: masterkey
+
+artifactory:
+  artifactory:
+    service:
+      type: NodePort
+    nodePort: 30280
+    persistence:
+      size: 20Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2
+        memory: 4Gi
+
+  frontend:
+    enabled: true
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "1Gi"
+        cpu: "1"
+
+  metadata:
+    enabled: true
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "1Gi"
+        cpu: "1"
+
+  event:
+    enabled: true
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "1Gi"
+        cpu: "1"
+
+  jfconnect:
+    enabled: false
+
+  federation:
+    enabled: false
+
+  observability:
+    enabled: true
+    resources:
+      requests:
+        memory: "100Mi"
+        cpu: "100m"
+      limits:
+        memory: "1Gi"
+        cpu: "1"
+
+  filebeat:
+    enabled: false
+
+  nginx:
+    enabled: false
+
+  postgresql:
+    enabled: true
+    postgresqlUsername: artifactory
+    postgresqlPassword: artifactory
+    postgresqlDatabase: artifactory
+    persistence:
+      enabled: true
+      size: 50Gi
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 2
+        memory: 4Gi

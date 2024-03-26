@@ -9,9 +9,7 @@ kube-state-metrics:
   rbac:
     create: true
     useClusterRole: false
-    namespaces:
-      - monitoring
-      - tyk
+    namespaces: "monitoring,tyk"
 
 grafana:
   enabled: true
@@ -29,8 +27,7 @@ grafana:
   sidecar:
     dashboards:
       enabled: true
-      searchNamespace:
-        - monitoring
+      searchNamespace: null
 
 alertmanager:
   enabled: false

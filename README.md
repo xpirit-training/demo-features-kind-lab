@@ -89,7 +89,7 @@ echo "Access Grafana at http://localhost:30080 with user 'admin' and password 'p
 echo "Access Tyk at http://localhost:30182 with user 'default@example.com' and password '123456'"
 
 # cleanup
-cleanup the cluster with `kind delete cluster --name demo`
+kind delete cluster --name demo
 ```
 
 ## Monitoring With Tyk and Monitoring using Umbrella Helm Chart
@@ -98,6 +98,11 @@ cleanup the cluster with `kind delete cluster --name demo`
 # create cluster
 # with kind
 kind create cluster --config labs/00-kind/kind.yml
+
+# helm repos
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add tyk-helm https://helm.tyk.io/public/helm/charts/
+helm repo update
 
 # ns
 kubectl apply -f labs/03-helm/prep
@@ -135,5 +140,46 @@ helm upgrade -i tyk-oss tyk-helm/tyk-oss \
 echo "Access Grafana at http://localhost:30080 with user 'admin' and password 'prom-operator'"
 
 # cleanup
-cleanup the cluster with `kind delete cluster --name demo`
+kind delete cluster --name demo
+```
+
+## JFrog Artifactory
+
+```bash
+# create cluster
+# with kind
+kind create cluster --config labs/00-kind/kind.yml
+
+# helm repos
+helm repo add jfrog https://charts.jfrog.io
+helm repo update
+
+# ns
+kubectl apply -f labs/04-artifactory/prep
+
+# master key
+export MASTER_KEY=$(openssl rand -hex 32)
+echo MasterKey: ${MASTER_KEY}
+kubectl create secret generic masterkey \
+    -n artifactory \
+    --from-literal=master-key=${MASTER_KEY}
+
+# join key
+export JOIN_KEY=$(openssl rand -hex 32)
+echo JoinKey: ${JOIN_KEY}
+kubectl create secret generic joinkey \
+    -n artifactory \
+    --from-literal=join-key=${JOIN_KEY}
+
+# artifactory
+helm upgrade -i artifactory-oss jfrog/artifactory-oss \
+    --version 107.77.7 \
+    --namespace artifactory \
+    -f labs/04-artifactory/artifactory.yml
+
+# info
+echo "Access Artifactory at http://localhost:30280 with user 'admin' and password 'password'"
+
+# cleanup
+kind delete cluster --name demo
 ```
